@@ -1,0 +1,106 @@
+@page "/add"
+@rendermode InteractiveServer
+@using Midterms.Models
+@using Midterms.Services
+@inject MediaTrackerService Tracker
+@inject NavigationManager Nav
+
+<PageTitle>PopcornVault • Add New</PageTitle>
+
+<div class="mx-auto max-w-xl">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold tracking-tight text-white">Add New</h1>
+        <p class="mt-1 text-zinc-400">Stash a movie or game in your vault.</p>
+    </div>
+
+    <div class="space-y-5 rounded-3xl border border-zinc-800 bg-zinc-900/60 p-8">
+        <div>
+            <label class="@Label">Type</label>
+            <select @bind="type" class="@Input">
+                <option value="Movie">🎬 Movie</option>
+                <option value="Game">🎮 Video Game</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="@Label">Title</label>
+            <input type="text" @bind="title" placeholder="e.g. Interstellar" class="@Input" />
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <p class="mt-1.5 text-xs text-red-400">@error</p>
+            }
+        </div>
+
+        <div>
+            <label class="@Label">Status</label>
+            <select @bind="status" class="@Input">
+                <option>Backlog</option>
+                <option>In Progress</option>
+                <option>Completed</option>
+            </select>
+        </div>
+
+        @if (type == "Movie")
+        {
+            <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                    <label class="@Label">Director</label>
+                    <input type="text" @bind="director" placeholder="Christopher Nolan" class="@Input" />
+                </div>
+                <div>
+                    <label class="@Label">Runtime (min)</label>
+                    <input type="number" min="1" @bind="runtime" class="@Input" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <div>
+                <label class="@Label">Platform</label>
+                <select @bind="platform" class="@Input">
+                    @foreach (var p in Platforms)
+                    {
+                        <option>@p</option>
+                    }
+                </select>
+            </div>
+        }
+
+        <button @onclick="Save"
+                class="w-full rounded-xl bg-violet-600 py-3 font-semibold text-white shadow-lg shadow-violet-600/25 transition hover:-translate-y-0.5 hover:bg-violet-500 active:translate-y-0">
+            Add to Vault
+        </button>
+    </div>
+</div>
+
+@code {
+    private const string Label = "mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-400";
+    private const string Input =
+        "w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30";
+
+    private static readonly string[] Platforms = { "PC", "PlayStation", "Xbox", "Nintendo Switch", "Mobile" };
+
+    private string type = "Movie";
+    private string title = "";
+    private string status = "Backlog";
+    private string director = "";
+    private int runtime = 120;
+    private string platform = "PC";
+    private string? error;
+
+    private void Save()
+    {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            error = "Title is required.";
+            return;
+        }
+
+        MediaItem item = type == "Movie"
+            ? new Movie { Title = title.Trim(), Status = status, Director = director.Trim(), RuntimeMinutes = runtime }
+            : new VideoGame { Title = title.Trim(), Status = status, Platform = platform };
+
+        Tracker.AddMedia(item);
+        Nav.NavigateTo("/library");
+    }
+}

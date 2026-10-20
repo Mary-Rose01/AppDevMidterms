@@ -1,0 +1,110 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using Midterms.Models
+@using Midterms.Services
+@inject MediaTrackerService Tracker
+
+<PageTitle>PopcornVault • Dashboard</PageTitle>
+
+<div class="mb-10">
+    <h1 class="text-3xl font-bold tracking-tight text-white">Dashboard</h1>
+    <p class="mt-1 text-zinc-400">Your backlog at a glance.</p>
+</div>
+
+<!-- Stats -->
+<section class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div class="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 transition hover:border-zinc-700">
+        <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">Total</p>
+        <p class="mt-2 text-4xl font-bold text-white">@items.Count</p>
+    </div>
+    <div class="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 transition hover:border-sky-500/40">
+        <p class="text-xs font-medium uppercase tracking-wider text-sky-400">Backlog</p>
+        <p class="mt-2 text-4xl font-bold text-white">@Count("Backlog")</p>
+    </div>
+    <div class="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 transition hover:border-amber-500/40">
+        <p class="text-xs font-medium uppercase tracking-wider text-amber-400">In Progress</p>
+        <p class="mt-2 text-4xl font-bold text-white">@Count("In Progress")</p>
+    </div>
+    <div class="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 transition hover:border-emerald-500/40">
+        <p class="text-xs font-medium uppercase tracking-wider text-emerald-400">Completed</p>
+        <p class="mt-2 text-4xl font-bold text-white">@Count("Completed")</p>
+    </div>
+</section>
+
+<!-- Completion progress -->
+<section class="mt-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5">
+    <div class="flex items-center justify-between text-sm">
+        <span class="font-medium text-zinc-300">Completion progress</span>
+        <span class="text-zinc-500">
+            🎬 @MovieCount movies · 🎮 @GameCount games · <span class="font-semibold text-emerald-400">@Percent%</span>
+        </span>
+    </div>
+    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-zinc-800">
+        <div class="h-full rounded-full bg-gradient-to-r from-violet-500 to-emerald-400 transition-all duration-700"
+             style="width:@Percent%"></div>
+    </div>
+</section>
+
+<!-- Pick for me -->
+<section class="mt-8 overflow-hidden rounded-3xl border border-violet-500/20 bg-gradient-to-br from-violet-600/20 via-zinc-900 to-zinc-900 p-8">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h2 class="text-xl font-semibold text-white">Can't decide?</h2>
+            <p class="mt-1 text-sm text-zinc-400">Let PopcornVault pick something from your backlog.</p>
+        </div>
+        <button @onclick="Pick"
+                class="rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white shadow-lg shadow-violet-600/25 transition hover:-translate-y-0.5 hover:bg-violet-500 active:translate-y-0">
+            🎲 @(picked is null ? "Pick for me" : "Re-roll")
+        </button>
+    </div>
+
+    @if (noBacklog)
+    {
+        <p class="mt-6 rounded-xl border border-zinc-800 bg-zinc-950/50 p-4 text-sm text-zinc-400">
+            Your backlog is empty. Add something new or go touch grass. 🌱
+        </p>
+    }
+    else if (picked is not null)
+    {
+        <div class="mt-6 rounded-2xl border border-zinc-700/60 bg-zinc-950/60 p-6">
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="rounded-full bg-violet-500/10 px-2.5 py-0.5 text-xs font-medium text-violet-300 ring-1 ring-inset ring-violet-500/20">
+                    @picked.GetMediaBadge()
+                </span>
+                <span class="rounded-full bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-400 ring-1 ring-inset ring-sky-500/20">
+                    @picked.Status
+                </span>
+            </div>
+            <h3 class="mt-3 text-2xl font-bold text-white">@picked.Title</h3>
+            @if (picked is Movie m)
+            {
+                <p class="mt-1 text-sm text-zinc-400">Directed by @m.Director · @m.RuntimeMinutes min</p>
+            }
+            else if (picked is VideoGame g)
+            {
+                <p class="mt-1 text-sm text-zinc-400">Platform: @g.Platform</p>
+            }
+        </div>
+    }
+</section>
+
+@code {
+    private List<MediaItem> items = new();
+    private MediaItem? picked;
+    private bool noBacklog;
+
+    protected override void OnInitialized() => items = Tracker.GetAllMedia().ToList();
+
+    private void Pick()
+    {
+        picked = Tracker.GetRandomBacklogItem();
+        noBacklog = picked is null;
+    }
+
+    private int Count(string status) => items.Count(i => i.Status == status);
+
+    private int Percent => items.Count == 0 ? 0 : Count("Completed") * 100 / items.Count;
+
+    private int MovieCount => items.Count(i => i is Movie);
+    private int GameCount => items.Count(i => i is VideoGame);
+}
