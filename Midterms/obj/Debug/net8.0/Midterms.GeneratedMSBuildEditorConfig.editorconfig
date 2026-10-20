@@ -30,16 +30,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[Z:/L23Y16W30/APPDEV/Midterms/Midterms/Components/MediaCard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNZWRpYUNhcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [Z:/L23Y16W30/APPDEV/Midterms/Midterms/Components/Pages/AddMedia.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBZGRNZWRpYS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[Z:/L23Y16W30/APPDEV/Midterms/Midterms/Components/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[Z:/L23Y16W30/APPDEV/Midterms/Midterms/Components/Pages/Error.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [Z:/L23Y16W30/APPDEV/Midterms/Midterms/Components/Pages/Home.razor]

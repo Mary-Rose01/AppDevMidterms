@@ -24,3 +24,4 @@ Z:\L23Y16W30\APPDEV\Midterms\Midterms\obj\Debug\net8.0\refint\Midterms.dll
 Z:\L23Y16W30\APPDEV\Midterms\Midterms\obj\Debug\net8.0\Midterms.pdb
 Z:\L23Y16W30\APPDEV\Midterms\Midterms\obj\Debug\net8.0\Midterms.genruntimeconfig.cache
 Z:\L23Y16W30\APPDEV\Midterms\Midterms\obj\Debug\net8.0\ref\Midterms.dll
+Z:\L23Y16W30\APPDEV\Midterms\Midterms\obj\Debug\net8.0\Midterms.sourcelink.json
