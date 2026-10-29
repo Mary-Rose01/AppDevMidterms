@@ -73,7 +73,7 @@
 
     private async Task Advance()
     {
-        Item.Status = Cycle[(Array.IndexOf(Cycle, Item.Status) + 1) % Cycle.Length];
+        Item.ChangeStatus(Cycle[(Array.IndexOf(Cycle, Item.Status) + 1) % Cycle.Length]);
         await OnChanged.InvokeAsync();
     }
 
