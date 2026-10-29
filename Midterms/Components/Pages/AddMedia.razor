@@ -14,7 +14,7 @@
 
 <div class="grid gap-8 lg:grid-cols-5">
 
-    <div class="space-y-5 rounded-2xl border border-amber-900/15 bg-white p-6 shadow-sm lg:col-span-3">
+    <div class="space-y-5 rounded-2xl border border-amber-900/15 bg-white p-6 shadow-xs lg:col-span-3">
 
         <div>
             <label class="@Label">Media Type</label>
@@ -32,6 +32,17 @@
         <div>
             <label class="@Label">Title</label>
             <input type="text" @bind="title" @bind:event="oninput" placeholder="e.g. Interstellar" class="@Input" />
+        </div>
+
+        <div>
+            <label class="@Label">Genre</label>
+            <input type="text" list="genre-options" @bind="genre" @bind:event="oninput" placeholder="e.g. Sci-Fi" class="@Input" />
+            <datalist id="genre-options">
+                @foreach (var g in Genres)
+                {
+                    <option value="@g"></option>
+                }
+            </datalist>
         </div>
 
         <div>
@@ -116,9 +127,15 @@
 
     private static readonly string[] Statuses = { "Backlog", "In Progress", "Completed" };
     private static readonly string[] Platforms = { "PC", "PlayStation", "Xbox", "Nintendo Switch", "Mobile" };
+    private static readonly string[] Genres =
+    {
+        "Action", "Adventure", "Animation", "Comedy", "Drama", "Horror",
+        "Platformer", "Roguelike", "RPG", "Sci-Fi", "Thriller"
+    };
 
     private string type = "Movie";
     private string title = "";
+    private string genre = "";
     private string status = "Backlog";
     private string director = "";
     private int runtime = 120;
@@ -130,12 +147,12 @@
     private MediaItem BuildItem() => type == "Movie"
         ? new Movie
         {
-            Title = title.Trim(), Status = status, PosterUrl = posterUrl.Trim(), Rating = rating,
+            Title = title.Trim(), Status = status, Genre = genre.Trim(), PosterUrl = posterUrl.Trim(), Rating = rating,
             Director = director.Trim(), RuntimeMinutes = runtime
         }
         : new VideoGame
         {
-            Title = title.Trim(), Status = status, PosterUrl = posterUrl.Trim(), Rating = rating,
+            Title = title.Trim(), Status = status, Genre = genre.Trim(), PosterUrl = posterUrl.Trim(), Rating = rating,
             Platform = platform
         };
 
