@@ -123,7 +123,7 @@
     private void StartPicked()
     {
         if (picked is null) return;
-        picked.Status = "In Progress";
+        picked.ChangeStatus("In Progress");
         picked = null;
         Refresh();
     }
